@@ -146,6 +146,10 @@
              ABA 1: 10 CLIENTES-ALVO (CARTÕES LIMPOS E DIRETOS)
              ========================================================== -->
         <section id="tab-radar" class="space-y-5">
+
+            <div class="bg-indigo-50 border border-indigo-100 rounded-xl px-4 py-3 text-sm text-indigo-900">
+                <strong>Modo apresentação:</strong> os 10 registros abaixo são dados demonstrativos pré-carregados nesta página. Não dependem de uma importação ou API; alterações de status valem apenas até fechar ou atualizar esta aba.
+            </div>
             
             <!-- Filtro Simples por Região -->
             <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -642,21 +646,7 @@
         });
 
         function loadImportersState() {
-            try {
-                const saved = localStorage.getItem('tsc_radar_manifestos_v1');
-                if (saved) {
-                    const parsed = JSON.parse(saved);
-                    // Mescla mantendo os novos campos de resumo limpo
-                    importersData = INITIAL_IMPORTERS.map(initItem => {
-                        const found = parsed.find(p => p.id === initItem.id);
-                        return found ? { ...initItem, status: normalizeStatus(found.status), notes: found.notes || '' } : initItem;
-                    });
-                } else {
-                    importersData = JSON.parse(JSON.stringify(INITIAL_IMPORTERS));
-                }
-            } catch (e) {
-                importersData = JSON.parse(JSON.stringify(INITIAL_IMPORTERS));
-            }
+            importersData = JSON.parse(JSON.stringify(INITIAL_IMPORTERS));
             updateRadarKPIs();
         }
 
@@ -669,11 +659,6 @@
         }
 
         function saveImportersState() {
-            try {
-                localStorage.setItem('tsc_radar_manifestos_v1', JSON.stringify(importersData));
-            } catch (e) {
-                console.error(e);
-            }
             updateRadarKPIs();
         }
 
