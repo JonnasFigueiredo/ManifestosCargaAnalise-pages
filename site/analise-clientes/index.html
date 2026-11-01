@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSC Express | Radar de Novos Clientes</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F8FAFC;
+            color: #0F172A;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Evita zoom automático no iPhone ao tocar em campos */
+        @media screen and (max-width: 767px) {
+            input, select, textarea {
+                font-size: 16px !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col pb-24 md:pb-12">
+
+    <!-- Aviso Rápido Flutuante (Toast) -->
+    <div id="toast" class="fixed bottom-20 md:bottom-6 right-4 left-4 md:left-auto md:right-6 z-50 hidden transition-all duration-300">
+        <div class="bg-slate-900 text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center space-x-3 max-w-md ml-auto">
+            <i class="fa-solid fa-circle-check text-emerald-400 text-lg shrink-0"></i>
+            <span id="toast-msg" class="text-sm font-semibold">Salvo com sucesso!</span>
+        </div>
+    </div>
+
+    <!-- Barra Inferior Fixa de Aplicativo para Celular -->
+    <nav class="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(15,23,42,0.06)] px-2 py-1.5 flex items-center justify-around">
+        <button onclick="switchTab('radar')" id="mob-tab-radar" class="flex flex-col items-center justify-center py-1.5 px-3 rounded-xl text-indigo-700 bg-indigo-50 font-bold transition min-h-[50px]">
+            <i class="fa-solid fa-building text-base mb-0.5"></i>
+            <span class="text-[11px]">10 Clientes</span>
+        </button>
+        <button onclick="switchTab('calculator')" id="mob-tab-calculator" class="flex flex-col items-center justify-center py-1.5 px-3 rounded-xl text-slate-500 font-medium transition min-h-[50px]">
+            <i class="fa-solid fa-calculator text-base mb-0.5"></i>
+            <span class="text-[11px]">Calculadora DTA</span>
+        </button>
+        <button onclick="switchTab('pitch')" id="mob-tab-pitch" class="flex flex-col items-center justify-center py-1.5 px-3 rounded-xl text-slate-500 font-medium transition min-h-[50px]">
+            <i class="fa-brands fa-whatsapp text-base mb-0.5"></i>
+            <span class="text-[11px]">Mensagens</span>
+        </button>
+        <button onclick="switchTab('playbook')" id="mob-tab-playbook" class="flex flex-col items-center justify-center py-1.5 px-3 rounded-xl text-slate-500 font-medium transition min-h-[50px]">
+            <i class="fa-solid fa-calendar-check text-base mb-0.5"></i>
+            <span class="text-[11px]">Passo a Passo</span>
+        </button>
+    </nav>
+
+    <!-- Cabeçalho Minimalista e Executivo -->
+    <header class="bg-white border-b border-slate-200 shadow-sm">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 py-5">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                
+                <!-- Título Claro e Direto -->
+                <div class="flex items-center space-x-3.5">
+                    <div class="w-12 h-12 rounded-2xl bg-[#1E3A8A] text-white flex items-center justify-center font-extrabold text-lg tracking-wider shrink-0 shadow-sm">
+                        TSC
+                    </div>
+                    <div>
+                        <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+                            TSC Express | Radar de Novos Clientes
+                        </h1>
+                        <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
+                            10 Indústrias Importadoras na Rota Santos ↔ Bauru / Interior / Guarulhos
+                        </p>
+                    </div>
+                </div>
+
+                <!-- 3 Números Grandes e Simples -->
+                <div class="grid grid-cols-3 gap-2 bg-slate-50 p-2 rounded-2xl border border-slate-200/80 text-center shrink-0">
+                    <div class="px-3 py-1">
+                        <span class="block text-xl font-extrabold text-slate-800" id="kpi-total-targets">10</span>
+                        <span class="text-[11px] text-slate-500 font-semibold">Empresas</span>
+                    </div>
+                    <div class="px-3 py-1 border-x border-slate-200">
+                        <span class="block text-xl font-extrabold text-indigo-600" id="kpi-in-progress">0</span>
+                        <span class="text-[11px] text-slate-500 font-semibold">Em Conversa</span>
+                    </div>
+                    <div class="px-3 py-1">
+                        <span class="block text-xl font-extrabold text-emerald-600" id="kpi-closed">0</span>
+                        <span class="text-[11px] text-slate-500 font-semibold">Fechados</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Abas no Computador (Escondidas no Celular) -->
+            <nav class="hidden md:flex items-center justify-between mt-5 pt-4 border-t border-slate-100">
+                <div class="flex space-x-2">
+                    <button onclick="switchTab('radar')" id="desk-tab-radar" class="px-4 py-2.5 rounded-xl text-sm font-bold bg-[#4F46E5] text-white shadow-sm flex items-center gap-2 transition">
+                        <i class="fa-solid fa-building"></i> 10 Clientes-Alvo
+                    </button>
+                    <button onclick="switchTab('calculator')" id="desk-tab-calculator" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 flex items-center gap-2 transition">
+                        <i class="fa-solid fa-calculator text-indigo-600"></i> Calculadora DTA
+                    </button>
+                    <button onclick="switchTab('pitch')" id="desk-tab-pitch" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 flex items-center gap-2 transition">
+                        <i class="fa-brands fa-whatsapp text-emerald-600 text-base"></i> Mensagens Prontas
+                    </button>
+                    <button onclick="switchTab('playbook')" id="desk-tab-playbook" class="px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 flex items-center gap-2 transition">
+                        <i class="fa-solid fa-calendar-check text-blue-700"></i> Passo a Passo
+                    </button>
+                </div>
+
+                <button onclick="exportManifestCSV()" class="text-xs font-bold text-slate-600 hover:text-indigo-700 px-3.5 py-2 rounded-xl border border-slate-200 hover:bg-slate-50 transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-download text-emerald-600"></i> Baixar Planilha
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <nav aria-label="Seções do painel" style="max-width:64rem;margin:16px auto 0;padding:0 1rem;display:flex;gap:8px;flex-wrap:wrap;width:100%">
+        <a href="../" style="display:inline-block;padding:10px 16px;border-radius:9px;background:white;border:1px solid #d0d5dd;color:#344054;text-decoration:none;font-weight:600">Importações</a>
+        <a href="./" aria-current="page" style="display:inline-block;padding:10px 16px;border-radius:9px;background:#155eef;color:white;text-decoration:none;font-weight:700">Análise de clientes</a>
+    </nav>
+
+    <!-- Conteúdo Principal -->
+    <main class="max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 flex-grow space-y-6">
+
+        <!-- ==========================================================
+             ABA 1: 10 CLIENTES-ALVO (CARTÕES LIMPOS E DIRETOS)
+             ========================================================== -->
+        <section id="tab-radar" class="space-y-5">
+            
+            <!-- Filtro Simples por Região -->
+            <div class="bg-white p-3.5 sm:p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 sm:pb-0">
+                    <button onclick="setCorridorFilter('ALL')" id="chip-ALL" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-[#1E3A8A] text-white shrink-0 transition">
+                        Todas (10)
+                    </button>
+                    <button onclick="setCorridorFilter('BAURU')" id="chip-BAURU" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0 transition">
+                        Bauru e Região (6)
+                    </button>
+                    <button onclick="setCorridorFilter('CAMPINAS')" id="chip-CAMPINAS" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0 transition">
+                        Campinas / Interior (3)
+                    </button>
+                    <button onclick="setCorridorFilter('GUARULHOS')" id="chip-GUARULHOS" class="px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0 transition">
+                        Guarulhos (1)
+                    </button>
+                </div>
+
+                <!-- Busca Rápida -->
+                <div class="relative sm:w-64">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+                    <input type="text" id="search-importer" oninput="renderImporters()" placeholder="Buscar empresa ou cidade..." class="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-indigo-600 focus:bg-white">
+                </div>
+            </div>
+
+            <!-- Lista de Cartões Limpos (1 por linha no celular, 2 por linha no PC) -->
+            <div id="importers-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+                <!-- Preenchido via JavaScript -->
+            </div>
+        </section>
+
+        <!-- ==========================================================
+             ABA 2: CALCULADORA DTA (VISUAL E SUPER FÁCIL)
+             ========================================================== -->
+        <section id="tab-calculator" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-7">
+                <div class="max-w-2xl">
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full">
+                        Argumento Financeiro para o Cliente
+                    </span>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
+                        Quanto o cliente economiza puxando em DTA com a TSC Express?
+                    </h2>
+                    <p class="text-sm text-slate-600 mt-1">
+                        Deslize as barras abaixo durante a conversa com o importador para mostrar quanto ele economiza tirando o contêiner do Porto de Santos rapidamente.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6 items-center">
+                    <!-- 3 Controles Deslizantes Grandes -->
+                    <div class="lg:col-span-6 space-y-5 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-500 mb-1">Nome da Empresa (Opcional)</label>
+                            <input type="text" id="calc-client" oninput="runDTACalculator()" value="Tilibra / ACCO Brands" class="w-full px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-semibold text-slate-900 focus:outline-none focus:border-indigo-600">
+                        </div>
+
+                        <!-- Controle 1 -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-slate-700">1. Quantidade de Contêineres</span>
+                                <span class="text-base font-extrabold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-lg" id="label-containers">5 Contêineres</span>
+                            </div>
+                            <input type="range" id="calc-containers" min="1" max="30" value="5" oninput="runDTACalculator()" class="w-full accent-indigo-600 cursor-pointer h-2.5 bg-slate-200 rounded-lg">
+                        </div>
+
+                        <!-- Controle 2 -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-slate-700">2. Valor Médio da Carga (por contêiner)</span>
+                                <span class="text-base font-extrabold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-lg" id="label-cif">R$ 350.000</span>
+                            </div>
+                            <input type="range" id="calc-cif" min="100000" max="1000000" step="50000" value="350000" oninput="runDTACalculator()" class="w-full accent-indigo-600 cursor-pointer h-2.5 bg-slate-200 rounded-lg">
+                        </div>
+
+                        <!-- Controle 3 -->
+                        <div>
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-bold text-slate-700">3. Dias até liberar a carga</span>
+                                <span class="text-base font-extrabold text-amber-700 bg-amber-50 px-3 py-1 rounded-lg" id="label-days">12 Dias</span>
+                            </div>
+                            <input type="range" id="calc-days" min="5" max="25" value="12" oninput="runDTACalculator()" class="w-full accent-amber-600 cursor-pointer h-2.5 bg-slate-200 rounded-lg">
+                        </div>
+                    </div>
+
+                    <!-- Painel de Resultado Gigante e Claro -->
+                    <div class="lg:col-span-6 space-y-4">
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="p-4 rounded-2xl bg-rose-50 border border-rose-200">
+                                <span class="text-xs font-bold text-rose-700 block">Parado no Porto (Santos)</span>
+                                <span class="text-xl sm:text-2xl font-extrabold text-rose-700 mt-1 block" id="res-primary-cost">R$ 38.500</span>
+                            </div>
+                            <div class="p-4 rounded-2xl bg-indigo-50 border border-indigo-200">
+                                <span class="text-xs font-bold text-indigo-800 block">Com DTA TSC Express</span>
+                                <span class="text-xl sm:text-2xl font-extrabold text-indigo-900 mt-1 block" id="res-dta-cost">R$ 21.250</span>
+                            </div>
+                        </div>
+
+                        <!-- Card Principal da Economia -->
+                        <div class="p-6 rounded-2xl bg-emerald-50 border-2 border-emerald-500 text-center space-y-2">
+                            <span class="text-xs font-extrabold uppercase tracking-wider text-emerald-800 block">
+                                Economia Estimada para o Cliente no Lote
+                            </span>
+                            <div class="text-3xl sm:text-4xl font-black text-emerald-700" id="res-savings">
+                                R$ 17.250
+                            </div>
+                            <span class="inline-block text-xs font-bold bg-emerald-600 text-white px-3 py-1 rounded-full" id="res-savings-pct">
+                                Redução de 45% nos custos portuários
+                            </span>
+                            <p class="text-xs text-emerald-900 pt-1">
+                                Essa economia na armazenagem praticamente paga o frete rodoviário da TSC Express.
+                            </p>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-2.5">
+                            <button onclick="copyCalculationWhatsApp()" class="flex-1 min-h-[48px] bg-[#10B981] hover:bg-emerald-600 text-white font-bold text-sm px-5 py-3 rounded-xl shadow-sm transition flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-lg"></i> Enviar Simulação no WhatsApp
+                            </button>
+                            <button onclick="copyCalculationClipboard()" class="min-h-[48px] bg-white hover:bg-slate-50 text-slate-700 font-bold text-sm px-4 py-3 rounded-xl border border-slate-300 transition flex items-center justify-center gap-2">
+                                <i class="fa-regular fa-copy"></i> Copiar Texto
+                            </button>
+                        </div>
+                        <textarea id="calc-summary-text" class="hidden"></textarea>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================
+             ABA 3: MENSAGENS PRONTAS (GERADOR DE PITCH DESCOMPLICADO)
+             ========================================================== -->
+        <section id="tab-pitch" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-7">
+                <div class="max-w-2xl">
+                    <span class="text-xs font-bold uppercase tracking-wider text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full">
+                        Textos Prontos para Enviar
+                    </span>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
+                        Mensagens Personalizadas para Abordar a Indústria
+                    </h2>
+                    <p class="text-sm text-slate-600 mt-1">
+                        Escolha a empresa e o canal. O texto já vem preenchido com o que ela importa por Santos e o argumento da base da TSC Express.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+                    <!-- Seletores Simples -->
+                    <div class="lg:col-span-5 space-y-4 bg-slate-50 p-5 rounded-2xl border border-slate-200">
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">1. Escolha a Empresa</label>
+                            <select id="pitch-target-select" onchange="generateManifestPitch()" class="w-full min-h-[46px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:border-indigo-600">
+                                <!-- Preenchido via JS -->
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold uppercase text-slate-600 mb-1.5">2. Onde você vai falar?</label>
+                            <select id="pitch-channel-select" onchange="generateManifestPitch()" class="w-full min-h-[46px] px-3.5 py-2.5 bg-white border border-slate-300 rounded-xl text-sm font-bold text-slate-900 focus:outline-none focus:border-indigo-600">
+                                <option value="whatsapp">💬 Mensagem de WhatsApp (Direta)</option>
+                                <option value="coldcall">📞 Roteiro para Ligação Telefônica</option>
+                                <option value="email">📧 E-mail de Apresentação</option>
+                                <option value="linkedin">🔗 Convite no LinkedIn</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Nome do Contato</label>
+                                <input type="text" id="pitch-buyer-name" oninput="generateManifestPitch()" value="Responsável de Comex" class="w-full min-h-[44px] px-3 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-indigo-600">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Assinado por</label>
+                                <input type="text" id="pitch-rep-name" oninput="generateManifestPitch()" value="TSC Express" class="w-full min-h-[44px] px-3 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-indigo-600">
+                            </div>
+                        </div>
+
+                        <!-- Resumo da Empresa Selecionada -->
+                        <div id="pitch-target-summary" class="p-4 rounded-xl bg-white border border-slate-200 text-xs space-y-1.5 text-slate-700">
+                            <!-- Atualizado via JS -->
+                        </div>
+                    </div>
+
+                    <!-- Caixa de Mensagem e Botões Gigantes -->
+                    <div class="lg:col-span-7 flex flex-col justify-between space-y-4">
+                        <div class="flex-grow flex flex-col">
+                            <label class="block text-xs font-bold uppercase text-slate-500 mb-1.5">Texto Pronto (Você pode editar se quiser):</label>
+                            <textarea id="pitch-manifest-output" rows="11" class="w-full flex-grow p-4 bg-slate-50 text-slate-800 text-sm rounded-2xl border border-slate-300 focus:outline-none focus:border-indigo-600 focus:bg-white leading-relaxed"></textarea>
+                        </div>
+
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <button onclick="sendManifestPitchWhatsApp()" class="flex-1 min-h-[50px] bg-[#10B981] hover:bg-emerald-600 text-white font-bold text-sm px-5 py-3 rounded-xl shadow-sm transition flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-xl"></i> Enviar no WhatsApp Agora
+                            </button>
+                            <button onclick="copyManifestPitch()" class="flex-1 min-h-[50px] bg-[#4F46E5] hover:bg-indigo-700 text-white font-bold text-sm px-5 py-3 rounded-xl shadow-sm transition flex items-center justify-center gap-2">
+                                <i class="fa-regular fa-copy text-base"></i> Copiar Texto
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==========================================================
+             ABA 4: PASSO A PASSO SEMANAL (ROTEIRO LIMPO)
+             ========================================================== -->
+        <section id="tab-playbook" class="hidden space-y-6">
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-7">
+                <div class="max-w-2xl">
+                    <span class="text-xs font-bold uppercase tracking-wider text-blue-800 bg-blue-50 px-3 py-1 rounded-full">
+                        Rotina Comercial Simples
+                    </span>
+                    <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
+                        Passo a Passo da Semana para Fechar Novos Contratos
+                    </h2>
+                    <p class="text-sm text-slate-600 mt-1">
+                        Um roteiro prático de Segunda a Sexta-feira para a equipe comercial da TSC Express transformar essas 10 empresas em clientes recorrentes.
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+                    <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                        <span class="inline-block text-xs font-extrabold uppercase px-2.5 py-1 rounded-md bg-blue-100 text-blue-900">Segunda-feira</span>
+                        <h3 class="text-base font-bold text-slate-900">1. Separar 3 a 5 Indústrias da Rota da Semana</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Olhe onde os caminhões da TSC Express estarão descarregando na semana (Bauru, região de Marília, Campinas ou Guarulhos) e escolha as indústrias vizinhas na aba <strong>10 Clientes-Alvo</strong>.
+                        </p>
+                    </div>
+
+                    <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                        <span class="inline-block text-xs font-extrabold uppercase px-2.5 py-1 rounded-md bg-indigo-100 text-indigo-900">Terça e Quarta-feira</span>
+                        <h3 class="text-base font-bold text-slate-900">2. Ligar para o Setor de Comex / Importação</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Toque no botão de telefone do cartão da empresa entre 08h30 e 11h00. Peça para falar com o responsável por <strong>Importação ou Frete Rodoviário</strong> e ofereça o caminhão de retorno saindo de Santos.
+                        </p>
+                    </div>
+
+                    <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                        <span class="inline-block text-xs font-extrabold uppercase px-2.5 py-1 rounded-md bg-emerald-100 text-emerald-900">Quinta-feira</span>
+                        <h3 class="text-base font-bold text-slate-900">3. Enviar a Simulação de Economia DTA no WhatsApp</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Para os clientes que reclamam do custo alto de armazenagem no Porto de Santos, abra a aba <strong>Calculadora DTA</strong> e envie o demonstrativo no WhatsApp provando a economia.
+                        </p>
+                    </div>
+
+                    <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+                        <span class="inline-block text-xs font-extrabold uppercase px-2.5 py-1 rounded-md bg-amber-100 text-amber-900">Sexta-feira</span>
+                        <h3 class="text-base font-bold text-slate-900">4. Enviar Documentos para Cadastro Rápido</h3>
+                        <p class="text-sm text-slate-600 leading-relaxed">
+                            Assim que o comprador pedir cotação, envie imediatamente a pasta da TSC Express (Cartão CNPJ, ANTT, Habilitação DTA, Seguros RCTR-C/RC-DC e Licenças de Carga Perigosa IMO).
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Rodapé Simples -->
+    <footer class="max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 text-center sm:text-left border-t border-slate-200 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div>
+            <strong>TSC Express</strong> (Top Sea Container Express Logística LTDA) • Matriz Bauru - SP | Filial Guarulhos - SP
+        </div>
+        <button onclick="exportManifestCSV()" class="text-indigo-700 font-bold hover:underline">
+            <i class="fa-solid fa-file-excel mr-1"></i> Exportar lista para Excel (CSV)
+        </button>
+    </footer>
+
+    <!-- ==========================================================
+         LÓGICA JAVASCRIPT (DADOS INTACTOS + REVELAÇÃO PROGRESSIVA)
+         ========================================================== -->
+    <script>
+        const INITIAL_IMPORTERS = [
+            {
+                id: 'tudor-baterias',
+                name: 'Tudor Baterias',
+                city: 'Bauru - SP',
+                corridor: 'BAURU',
+                primaryBadge: 'DTA + Carga Química IMO • Rota Bauru',
+                shortSummary: 'Importa chumbo, polímeros e químicos classificados (IMO) via Santos e exporta baterias.',
+                distanceInfo: 'Na mesma cidade da Matriz TSC Express (Bauru)',
+                address: 'Rod. Mal. Rondon / Gov. Castelo Branco, Km 232, Bauru - SP',
+                phone: '(14) 2108-7000',
+                phoneClean: '551421087000',
+                website: 'https://www.tudor.com.br',
+                decisorRole: 'Compras Comex / Logística Externa',
+                isIMO: true,
+                isBackhaul: true,
+                tags: ['Base Bauru', 'Carga Perigosa IMO', 'Frete Casado (Imp/Exp)', 'DTA e DI'],
+                manifestItems: 'Importa ligas de chumbo, separadores de polietileno, polímeros e aditivos químicos classificados (Carga IMO) pelo Porto de Santos. Também exporta baterias automotivas e estacionárias.',
+                killerArgument: 'Vizinha da matriz da TSC Express em Bauru! Permite casar o caminhão que desce com baterias de exportação para Santos e sobe com insumos químicos IMO em DI ou DTA.',
+                status: 'Não Contatado',
+                notes: ''
+            },
+            {
+                id: 'tilibra-acco',
+                name: 'Tilibra / ACCO Brands Brasil',
+                city: 'Bauru - SP',
+                corridor: 'BAURU',
+                primaryBadge: 'Rota Bauru • Alto Giro de Contêineres',
+                shortSummary: 'Importa dezenas de contêineres 40\' HC com papelaria e insumos gráficos via Santos.',
+                distanceInfo: 'Na mesma cidade da Matriz TSC Express (Bauru)',
+                address: 'Rua Aimorés, 6-9, Vila Falcão, Bauru - SP',
+                phone: '(14) 2106-9000',
+                phoneClean: '551421069000',
+                website: 'https://www.tilibra.com.br',
+                decisorRole: 'Supply Chain / Coordenação de Importação',
+                isIMO: false,
+                isBackhaul: true,
+                tags: ['Base Bauru', 'Alto Giro 40\' HC', 'DTA e DI', 'Retorno Garantido'],
+                manifestItems: 'Importa dezenas de contêineres 40\' HC pelo Porto de Santos com artigos escolares, materiais de escritório, insumos gráficos, espirais e produtos acabados do grupo ACCO Brands.',
+                killerArgument: 'Os caminhões da TSC Express precisam voltar para a matriz em Bauru toda semana. A TSC pode dedicar tração de retorno de Santos para a fábrica da Tilibra sem custo de retorno vazio.',
+                status: 'Não Contatado',
+                notes: ''
+            },
+            {
+                id: 'mezzani-alimentos',
+                name: 'Mezzani Alimentos',
+                city: 'Bauru - SP',
+                corridor: 'BAURU',
+                primaryBadge: 'Rota Bauru • DI & Insumos Industriais',
+                shortSummary: 'Importa maquinário de massas, peças e embalagens especiais pelo Porto de Santos.',
+                distanceInfo: 'Distrito Industrial de Bauru (A 10 min da Matriz TSC)',
+                address: 'Distrito Industrial I, Bauru - SP',
+                phone: '(14) 3203-2600',
+                phoneClean: '551432032600',
+                website: 'https://www.mezzani.com.br',
+                decisorRole: 'Gerência Industrial / Suprimentos & Comex',
+                isIMO: false,
+                isBackhaul: true,
+                tags: ['Base Bauru', 'DI & Maquinário', 'Insumos Alimentícios'],
+                manifestItems: 'Importa maquinário industrial de massas, peças de reposição, filmes de embalagem especial e matérias-primas alimentícias via Porto de Santos.',
+                killerArgument: 'Proximidade física total no Distrito Industrial de Bauru para atendimento rápido em DI e cargas refrigeradas/secas subindo do litoral paulista.',
+                status: 'Não Contatado',
+                notes: ''
+            },
+            {
+                id: 'lwart-lencois',
+                name: 'Lwart Soluções Ambientais',
+                city: 'Lençóis Paulista - SP',
+                corridor: 'BAURU',
+                primaryBadge: 'DTA + Carga Química IMO • 40km de Bauru',
+                shortSummary: 'Importa aditivos químicos para lubrificantes e catalisadores via Porto de Santos.',
+                distanceInfo: 'A apenas 40 km da Matriz da TSC Express em Bauru',
+                address: 'Rodovia Marechal Rondon, Km 292, Lençóis Paulista - SP',
+                phone: '(14) 3269-5000',
+                phoneClean: '551432695000',
+                website: 'https://www.lwart.com.br',
+                decisorRole: 'Suprimentos Corporativos / Logística Químicos',
+                isIMO: true,
+                isBackhaul: true,
+                tags: ['Eixo Bauru (40km)', 'Carga Perigosa IMO', 'Isotanks / Contêineres', 'DTA e DI'],
+                manifestItems: 'Importa aditivos químicos especiais para óleos lubrificantes, catalisadores industriais e equipamentos de rerrefino pelo Porto de Santos (forte presença na Ilha Barnabé e Alemoa).',
+                killerArgument: 'Combinação perfeita entre a licença de Produtos Perigosos (IMO) da TSC Express e a localização estratégica na Rodovia Marechal Rondon (eixo Bauru-Lençóis).',
+                status: 'Não Contatado',
+                notes: ''
+            },
+            {
+                id: 'jacto-maquinas',
+                name: 'Jacto Máquinas Agrícolas',
+                city: 'Pompeia / Paulínia - SP',
+                corridor: 'BAURU',
+                primaryBadge: 'Alto Volume DTA & DI • Frete Casado',
+                shortSummary: 'Importa componentes hidráulicos e sensores via Santos (DTA/DI) e exporta máquinas.',
+                distanceInfo: 'Eixo Centro-Oeste Paulista (Rota Bauru – Marília)',
+                address: 'Rua Dr. Luiz Miranda, 1650, Pompeia - SP',
+                phone: '(14) 3405-2100',
+                phoneClean: '551434052100',
+                website: 'https://www.jacto.com',
+                decisorRole: 'Comércio Exterior / Logística Internacional',
+                isIMO: false,
+                isBackhaul: true,
+                tags: ['Gigante Exportadora/Importadora', 'Forte em DTA e DI', 'Frete Casado'],
+                manifestItems: 'Importa bombas de alta pressão, componentes hidráulicos, sensores agrícolas, aço especial e resinas via Porto de Santos em regime de DTA (Porto Seco) e DI. Exporta pulverizadores em contêineres.',
+                killerArgument: 'Um dos maiores embarcadores de contêineres do Centro-Oeste Paulista. A TSC Express pode operar tanto na remoção DTA em Santos quanto no circuito completo Bauru/Pompeia ↔ Porto de Santos.',
+                status: 'Não Contatado',
+                notes: ''
+            },
+            {
+                id: 'marilan-alimentos',
+                name: 'Marilan Alimentos S/A',
+                city: 'Marília - SP',
+                corridor: 'BAURU',
+                primaryBadge: 'Eixo Bauru-Marília • Importa e Exporta',
+                shortSummary: 'Importa insumos e embalagens por Santos e exporta biscoitos para mais de 50 países.',
+                distanceInfo: 'Eixo Bauru – Marília (100 km da Matriz TSC)',
+                address: 'Av. José de Grande, 366, Fragata, Marília - SP',
+                phone: '(14) 3401-6000',
+                phoneClean: '551434016000',
+                website: 'https://www.marilan.com',
+                decisorRole: 'Supply Chain / Logística de Importação & Exportação',
+                isIMO: false,
+                isBackhaul: true,
+                tags: ['Eixo Bauru-Marília', 'Importa & Exporta Contêineres', 'DI / DTA'],
+                manifestItems: 'Importa ingredientes especiais, derivados de cacau, filmes BOPP de embalagem e linhas de fornos industriais via Santos; exporta biscoitos em contêineres para mais de 50 países.',
+                killerArgument: 'Permite fechar circuito redondo: descer com contêiner de exportação de biscoitos de Marília para os terminais de Santos (BTP/Tecon) e subir com DI/DTA para o interior.',
+                status: 'Não Contatado',
+                notes: ''
+            },
+            {
+                id: 'adere-fitas',
+                name: 'Adere Fitas Adesivas',
+                city: 'Sumaré / Campinas - SP',
+                corridor: 'CAMPINAS',
+                primaryBadge: 'DTA + Carga Química IMO • Eixo Campinas',
+                shortSummary: 'Importa resinas adesivas, borrachas e solventes químicos (IMO) pelo Porto de Santos.',
+                distanceInfo: 'Corredor Anhanguera (Passagem obrigatória Santos ↔ Interior)',
+                address: 'Via Anhanguera, Km 108, Sumaré - SP',
+                phone: '(19) 2104-0700',
+                phoneClean: '551921040700',
+                website: 'https://www.adere.com.br',
+                decisorRole: 'Logística / Compras Internacionais (Comex)',
+                isIMO: true,
+                isBackhaul: false,
+                tags: ['Carga Química IMO', 'DTA Porto Seco Campinas', 'DI Direta'],
+                manifestItems: 'Importa borrachas sintéticas, resinas adesivas, solventes químicos (Carga Perigosa IMO) e filmes de polipropileno pelo Porto de Santos.',
+                killerArgument: 'Exige transportadora que domine simultaneamente DTA/DI no Porto de Santos e tenha todas as licenças ambientais para transporte de produtos químicos adesivos (IMO).',
+                status: 'Não Contatado',
+                notes: ''
+            },
+            {
+                id: 'foxconn-jundiai',
+                name: 'Foxconn Brasil (Eletrônicos)',
+                city: 'Jundiaí - SP',
+                corridor: 'CAMPINAS',
+                primaryBadge: 'Altíssimo Volume DTA & DI • Alto Valor',
+                shortSummary: 'Importa centenas de contêineres de eletrônicos e baterias (IMO 9) via Santos e GRU.',
+                distanceInfo: 'Eixo Bandeirantes/Anhanguera (Rota Santos ↔ Interior)',
+                address: 'Av. Navarro de Andrade, s/n, Jundiaí - SP',
+                phone: '(11) 4525-7000',
+                phoneClean: '551145257000',
+                website: 'https://www.foxconn.com',
+                decisorRole: 'Inbound Logistics / Operações Aduaneiras (DTA)',
+                isIMO: true,
+                isBackhaul: false,
+                tags: ['Altíssimo Volume DTA', 'Baterias Lítio (IMO 9)', 'Alto Valor / PGR'],
+                manifestItems: 'Importa centenas de contêineres de placas-mãe, displays, semicondutores e baterias de íons de lítio (Classe IMO 9) via Porto de Santos e Aeroporto de Guarulhos.',
+                killerArgument: 'A TSC Express possui base em Guarulhos e forte atuação em Santos, cobrindo exatamente o eixo marítimo-rodoviário-aéreo (DTA entre Santos, GRU e CLIAs de Jundiaí/Campinas).',
+                status: 'Não Contatado',
+                notes: ''
+            },
+            {
+                id: 'robert-bosch',
+                name: 'Robert Bosch Ltda',
+                city: 'Campinas - SP',
+                corridor: 'CAMPINAS',
+                primaryBadge: 'DTA Entreposto & DI Just-in-Time',
+                shortSummary: 'Importa autopeças, sistemas de injeção e fluidos químicos pelo Porto de Santos.',
+                distanceInfo: 'Via Anhanguera, Km 98, Campinas - SP',
+                address: 'Via Anhanguera, Km 98, Campinas - SP',
+                phone: '(19) 2103-1419',
+                phoneClean: '551921031419',
+                website: 'https://www.bosch.com.br',
+                decisorRole: 'Overland Procurement / Logística Comex',
+                isIMO: true,
+                isBackhaul: false,
+                tags: ['DTA Entreposto', 'DI Just-in-Time', 'Autopeças & Químicos'],
+                manifestItems: 'Importa sistemas de injeção, componentes eletrônicos automotivos, aço usinado e fluidos químicos pelo Porto de Santos (foco nos terminais Tecon, TEV e BTP).',
+                killerArgument: 'A Bosch não pode sofrer parada de linha nem atraso de janela em Santos. A especialização da TSC Express em evitar no-show e gerir DTA/DI encaixa na exigência alemã de pontualidade.',
+                status: 'Não Contatado',
+                notes: ''
+            },
+            {
+                id: 'ache-laboratorios',
+                name: 'Aché Laboratórios Farmacêuticos',
+                city: 'Guarulhos - SP',
+                corridor: 'GUARULHOS',
+                primaryBadge: 'Base Guarulhos • DTA & Químico/Farma',
+                shortSummary: 'Importa insumos farmacêuticos e químicos controlados via Porto de Santos e GRU.',
+                distanceInfo: 'Ao lado da Filial/Base Operacional da TSC Express em Guarulhos',
+                address: 'Rodovia Presidente Dutra, Km 222,2, Porto da Igreja, Guarulhos - SP',
+                phone: '(11) 2608-6000',
+                phoneClean: '551126086000',
+                website: 'https://www.ache.com.br',
+                decisorRole: 'Supply Chain / Logística Internacional & Comex',
+                isIMO: true,
+                isBackhaul: false,
+                tags: ['Base Guarulhos', 'DTA Santos ↔ GRU', 'Químico / Reefer'],
+                manifestItems: 'Importa Insumos Farmacêuticos Ativos (IFAs), reagentes químicos, blísteres de alumínio e equipamentos de laboratório pelo Porto de Santos (Movecta/Tecon/BTP) e Aeroporto GRU.',
+                killerArgument: 'A filial da TSC Express em Guarulhos fica ao lado da fábrica do Aché na Via Dutra, oferecendo resposta imediata para puxar contêineres de Santos (DI ou DTA) direto para Guarulhos.',
+                status: 'Não Contatado',
+                notes: ''
+            }
+        ];
+
+        let importersData = [];
+        let activeCorridorFilter = 'ALL';
+        let openDetailsMap = {};
+
+        window.addEventListener('DOMContentLoaded', () => {
+            loadImportersState();
+            populatePitchSelect();
+            renderImporters();
+            runDTACalculator();
+            generateManifestPitch();
+        });
+
+        function loadImportersState() {
+            try {
+                const saved = localStorage.getItem('tsc_radar_manifestos_v1');
+                if (saved) {
+                    const parsed = JSON.parse(saved);
+                    // Mescla mantendo os novos campos de resumo limpo
+                    importersData = INITIAL_IMPORTERS.map(initItem => {
+                        const found = parsed.find(p => p.id === initItem.id);
+                        return found ? { ...initItem, status: normalizeStatus(found.status), notes: found.notes || '' } : initItem;
+                    });
+                } else {
+                    importersData = JSON.parse(JSON.stringify(INITIAL_IMPORTERS));
+                }
+            } catch (e) {
+                importersData = JSON.parse(JSON.stringify(INITIAL_IMPORTERS));
+            }
+            updateRadarKPIs();
+        }
+
+        function normalizeStatus(st) {
+            const valid = ['Não Contatado', 'Em Conversa', 'Proposta Enviada', 'Cliente Fechado'];
+            if (valid.includes(st)) return st;
+            if (st === 'Cliente Ativo') return 'Cliente Fechado';
+            if (st && st !== 'Não Contatado') return 'Em Conversa';
+            return 'Não Contatado';
+        }
+
+        function saveImportersState() {
+            try {
+                localStorage.setItem('tsc_radar_manifestos_v1', JSON.stringify(importersData));
+            } catch (e) {
+                console.error(e);
+            }
+            updateRadarKPIs();
+        }
+
+        function updateRadarKPIs() {
+            const total = importersData.length;
+            const inProgress = importersData.filter(i => ['Em Conversa', 'Proposta Enviada'].includes(i.status)).length;
+            const closed = importersData.filter(i => i.status === 'Cliente Fechado').length;
+
+            document.getElementById('kpi-total-targets').textContent = total;
+            document.getElementById('kpi-in-progress').textContent = inProgress;
+            document.getElementById('kpi-closed').textContent = closed;
+        }
+
+        // Navegação entre as 4 Abas
+        function switchTab(tabId) {
+            const tabs = ['radar', 'calculator', 'pitch', 'playbook'];
+            tabs.forEach(t => {
+                const section = document.getElementById(`tab-${t}`);
+                const deskBtn = document.getElementById(`desk-tab-${t}`);
+                const mobBtn = document.getElementById(`mob-tab-${t}`);
+
+                if (t === tabId) {
+                    section.classList.remove('hidden');
+                    if (deskBtn) {
+                        deskBtn.className = 'px-4 py-2.5 rounded-xl text-sm font-bold bg-[#4F46E5] text-white shadow-sm flex items-center gap-2 transition';
+                    }
+                    if (mobBtn) {
+                        mobBtn.className = 'flex flex-col items-center justify-center py-1.5 px-3 rounded-xl text-indigo-700 bg-indigo-50 font-bold transition min-h-[50px]';
+                    }
+                } else {
+                    section.classList.add('hidden');
+                    if (deskBtn) {
+                        deskBtn.className = 'px-4 py-2.5 rounded-xl text-sm font-semibold text-slate-600 hover:bg-slate-100 flex items-center gap-2 transition';
+                    }
+                    if (mobBtn) {
+                        mobBtn.className = 'flex flex-col items-center justify-center py-1.5 px-3 rounded-xl text-slate-500 font-medium transition min-h-[50px]';
+                    }
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Filtro por Região
+        function setCorridorFilter(corridor) {
+            activeCorridorFilter = corridor;
+            const chips = ['ALL', 'BAURU', 'CAMPINAS', 'GUARULHOS'];
+            chips.forEach(c => {
+                const el = document.getElementById(`chip-${c}`);
+                if (!el) return;
+                if (c === corridor) {
+                    el.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-[#1E3A8A] text-white shrink-0 transition';
+                } else {
+                    el.className = 'px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-slate-100 text-slate-700 hover:bg-slate-200 shrink-0 transition';
+                }
+            });
+            renderImporters();
+        }
+
+        function getStatusClasses(status) {
+            switch (status) {
+                case 'Cliente Fechado':
+                    return 'bg-emerald-50 text-emerald-800 border-emerald-300';
+                case 'Proposta Enviada':
+                    return 'bg-amber-50 text-amber-800 border-amber-300';
+                case 'Em Conversa':
+                    return 'bg-indigo-50 text-indigo-800 border-indigo-300';
+                default:
+                    return 'bg-slate-50 text-slate-700 border-slate-200';
+            }
+        }
+
+        function toggleCardDetails(id) {
+            openDetailsMap[id] = !openDetailsMap[id];
+            renderImporters();
+        }
+
+        // Renderizar Cartões Limpos com Revelação Progressiva
+        function renderImporters() {
+            const container = document.getElementById('importers-grid');
+            const query = document.getElementById('search-importer').value.toLowerCase();
+
+            const filtered = importersData.filter(item => {
+                const matchSearch = item.name.toLowerCase().includes(query) ||
+                                    item.city.toLowerCase().includes(query) ||
+                                    item.shortSummary.toLowerCase().includes(query) ||
+                                    item.manifestItems.toLowerCase().includes(query);
+
+                const matchCorridor = activeCorridorFilter === 'ALL' || item.corridor === activeCorridorFilter;
+                return matchSearch && matchCorridor;
+            });
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="col-span-full bg-white rounded-2xl border border-slate-200 p-10 text-center">
+                        <p class="font-bold text-slate-800 text-base">Nenhuma empresa encontrada.</p>
+                        <button onclick="setCorridorFilter('ALL'); document.getElementById('search-importer').value=''; renderImporters();" class="mt-3 px-4 py-2.5 bg-indigo-600 text-white rounded-xl text-xs font-bold">
+                            Mostrar todas as 10 empresas
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(item => {
+                const isOpen = !!openDetailsMap[item.id];
+                const badgeColor = item.isIMO
+                    ? 'bg-amber-50 text-amber-800 border-amber-200'
+                    : 'bg-indigo-50 text-indigo-800 border-indigo-200';
+
+                return `
+                <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 flex flex-col justify-between transition hover:border-slate-300">
+                    <div>
+                        <!-- 1. Topo Limpo: Cidade + 1 Badge Principal -->
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <span class="text-xs font-bold text-slate-500">
+                                <i class="fa-solid fa-location-dot text-indigo-600 mr-1"></i>${item.city}
+                            </span>
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-lg border ${badgeColor}">
+                                ${item.primaryBadge}
+                            </span>
+                        </div>
+
+                        <!-- 2. Nome da Indústria + 1 Frase Resumo -->
+                        <h3 class="text-lg font-extrabold text-slate-900 mt-2">${item.name}</h3>
+                        <p class="text-sm text-slate-600 mt-1 leading-relaxed">
+                            ${item.shortSummary}
+                        </p>
+
+                        <!-- 3. Linha de Contato Rápido (Telefone Clicável) e Status Simples -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-4 pt-3.5 border-t border-slate-100">
+                            <a href="tel:${item.phoneClean}" class="min-h-[44px] px-3.5 py-2 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 flex items-center justify-between text-xs font-bold text-slate-800 transition">
+                                <span><i class="fa-solid fa-phone text-emerald-600 mr-1.5"></i>${item.phone}</span>
+                                <span class="text-[11px] text-indigo-600">Ligar</span>
+                            </a>
+
+                            <select onchange="updateImporterStatus('${item.id}', this.value)" class="min-h-[44px] px-3 py-2 rounded-xl text-xs font-bold border ${getStatusClasses(item.status)} focus:outline-none cursor-pointer">
+                                <option value="Não Contatado" ${item.status === 'Não Contatado' ? 'selected' : ''}>⚪ Não Contatado</option>
+                                <option value="Em Conversa" ${item.status === 'Em Conversa' ? 'selected' : ''}>🔵 Em Conversa</option>
+                                <option value="Proposta Enviada" ${item.status === 'Proposta Enviada' ? 'selected' : ''}>🟡 Proposta Enviada</option>
+                                <option value="Cliente Fechado" ${item.status === 'Cliente Fechado' ? 'selected' : ''}>🟢 Cliente Fechado</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- 4. Botões Claros: Abordar no WhatsApp + Ver Detalhes (Gaveta Suave) -->
+                    <div class="mt-4 space-y-2.5">
+                        <div class="flex flex-col sm:flex-row gap-2">
+                            <button onclick="openManifestPitchFor('${item.id}')" class="flex-1 min-h-[46px] bg-[#10B981] hover:bg-emerald-600 text-white font-bold text-xs sm:text-sm py-2.5 px-4 rounded-xl shadow-sm transition flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-base"></i> Abordar no WhatsApp / Script
+                            </button>
+                            <button onclick="toggleCardDetails('${item.id}')" class="min-h-[46px] px-3.5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition flex items-center justify-center gap-1.5">
+                                <span>${isOpen ? 'Ocultar Detalhes' : 'Ver Detalhes'}</span>
+                                <i class="fa-solid ${isOpen ? 'fa-chevron-up' : 'fa-chevron-down'} text-[11px]"></i>
+                            </button>
+                        </div>
+
+                        <!-- Gaveta de Detalhes (Só aparece quando clicada) -->
+                        <div class="${isOpen ? 'block' : 'hidden'} pt-3 mt-3 border-t border-slate-200 space-y-3 text-xs">
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                                <span class="font-bold text-slate-800 block">Quem procurar na empresa:</span>
+                                <p class="text-slate-600">${item.decisorRole}</p>
+                            </div>
+
+                            <div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-1">
+                                <span class="font-bold text-emerald-950 block">Por que a TSC Express ganha esse cliente:</span>
+                                <p class="text-emerald-900 leading-relaxed">${item.killerArgument}</p>
+                            </div>
+
+                            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+                                <span class="font-bold text-slate-800 block">Detalhes do que importa por Santos:</span>
+                                <p class="text-slate-600 leading-relaxed">${item.manifestItems}</p>
+                                <div class="pt-1 flex items-center justify-between text-[11px] text-slate-500">
+                                    <span>${item.address}</span>
+                                    <a href="${item.website}" target="_blank" class="text-indigo-600 font-bold hover:underline">Abrir Site <i class="fa-solid fa-arrow-up-right-from-square ml-0.5"></i></a>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block font-bold text-slate-700 mb-1">Suas Anotações (Salvas Automaticamente):</label>
+                                <textarea
+                                    rows="2"
+                                    onblur="updateImporterNotes('${item.id}', this.value)"
+                                    placeholder="Digite aqui o nome do comprador, retorno da ligação ou observações..."
+                                    class="w-full p-2.5 bg-white border border-slate-300 rounded-xl text-xs text-slate-800 focus:outline-none focus:border-indigo-600"
+                                >${item.notes || ''}</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function updateImporterStatus(id, newStatus) {
+            const target = importersData.find(i => i.id === id);
+            if (target) {
+                target.status = newStatus;
+                saveImportersState();
+                renderImporters();
+                showToast(`Status de ${target.name} atualizado!`);
+            }
+        }
+
+        function updateImporterNotes(id, newNotes) {
+            const target = importersData.find(i => i.id === id);
+            if (target && target.notes !== newNotes) {
+                target.notes = newNotes;
+                saveImportersState();
+                showToast(`Anotação salva em ${target.name}.`);
+            }
+        }
+
+        // ==========================================================
+        // ABA 2: CALCULADORA DTA
+        // ==========================================================
+        function runDTACalculator() {
+            const clientName = document.getElementById('calc-client').value.trim() || 'Importador';
+            const containers = parseInt(document.getElementById('calc-containers').value, 10) || 1;
+            const cifValue = parseFloat(document.getElementById('calc-cif').value) || 350000;
+            const days = parseInt(document.getElementById('calc-days').value, 10) || 12;
+
+            const fmtBRL = (val) => val.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL', maximumFractionDigits: 0 });
+
+            document.getElementById('label-containers').textContent = `${containers} ${containers === 1 ? 'Contêiner' : 'Contêineres'}`;
+            document.getElementById('label-cif').textContent = fmtBRL(cifValue);
+            document.getElementById('label-days').textContent = `${days} Dias`;
+
+            let primaryRatePct = 0.0075;
+            if (days > 7 && days <= 14) {
+                primaryRatePct = 0.021;
+            } else if (days > 14) {
+                primaryRatePct = 0.038;
+            }
+
+            const primaryStoragePerCntr = Math.max(cifValue * primaryRatePct, 3200) + 1400;
+            const totalPrimaryCost = Math.round(primaryStoragePerCntr * containers);
+
+            const dtaTotalPerCntr = Math.max(cifValue * (primaryRatePct * 0.42), 1850) + 1650;
+            const totalDTACost = Math.round(dtaTotalPerCntr * containers);
+
+            const savings = Math.max(totalPrimaryCost - totalDTACost, 1200 * containers);
+            const savingsPct = Math.round((savings / totalPrimaryCost) * 100);
+
+            document.getElementById('res-primary-cost').textContent = fmtBRL(totalPrimaryCost);
+            document.getElementById('res-dta-cost').textContent = fmtBRL(totalDTACost);
+            document.getElementById('res-savings').textContent = fmtBRL(savings);
+            document.getElementById('res-savings-pct').textContent = `Redução de ${savingsPct}% nos custos portuários`;
+
+            const summaryText = `📊 *SIMULAÇÃO DE ECONOMIA PORTUÁRIA — TSC EXPRESS*
+Empresa: *${clientName}*
+Lote: *${containers} contêiner(es)* | Valor médio: *${fmtBRL(cifValue)}* (${days} dias)
+
+❌ *Deixando parado no Porto de Santos:* ${fmtBRL(totalPrimaryCost)}
+✅ *Remoção imediata em DTA com a TSC Express:* ${fmtBRL(totalDTACost)}
+💰 *Economia estimada no lote:* *${fmtBRL(savings)} (-${savingsPct}%)*
+
+A TSC Express (bases em Bauru e Guarulhos) é especialista em DTA, DI e cargas IMO no Porto de Santos. Vamos cotar seu próximo embarque?`;
+
+            document.getElementById('calc-summary-text').value = summaryText;
+        }
+
+        function copyCalculationClipboard() {
+            const text = document.getElementById('calc-summary-text').value;
+            const temp = document.createElement('textarea');
+            temp.value = text;
+            document.body.appendChild(temp);
+            temp.select();
+            document.execCommand('copy');
+            document.body.removeChild(temp);
+            showToast('Demonstrativo copiado!');
+        }
+
+        function copyCalculationWhatsApp() {
+            const text = document.getElementById('calc-summary-text').value;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        // ==========================================================
+        // ABA 3: GERADOR DE MENSAGENS PRONTAS
+        // ==========================================================
+        function populatePitchSelect() {
+            const select = document.getElementById('pitch-target-select');
+            select.innerHTML = importersData.map(item =>
+                `<option value="${item.id}">${item.name} (${item.city})</option>`
+            ).join('');
+        }
+
+        function openManifestPitchFor(id) {
+            const select = document.getElementById('pitch-target-select');
+            select.value = id;
+            generateManifestPitch();
+            switchTab('pitch');
+            const target = importersData.find(i => i.id === id);
+            if (target) {
+                showToast(`Mensagem pronta para ${target.name}!`);
+            }
+        }
+
+        function generateManifestPitch() {
+            const selectedId = document.getElementById('pitch-target-select').value;
+            const channel = document.getElementById('pitch-channel-select').value;
+            const buyer = document.getElementById('pitch-buyer-name').value.trim() || 'Responsável de Comex';
+            const rep = document.getElementById('pitch-rep-name').value.trim() || 'TSC Express';
+
+            const target = importersData.find(i => i.id === selectedId) || importersData[0];
+
+            document.getElementById('pitch-target-summary').innerHTML = `
+                <div class="font-bold text-slate-900 text-sm">${target.name} (${target.city})</div>
+                <p><strong>Telefone:</strong> <a href="tel:${target.phoneClean}" class="text-indigo-600 font-bold underline">${target.phone}</a> • <strong>Procurar por:</strong> ${target.decisorRole}</p>
+                <p class="text-emerald-800 bg-emerald-50 p-2 rounded-lg border border-emerald-200"><strong>Ponto forte:</strong> ${target.killerArgument}</p>
+            `;
+
+            let output = '';
+
+            if (channel === 'whatsapp') {
+                output = `Olá, ${buyer}, tudo bem? Aqui é da *${rep}*.
+
+Acompanhamos o fluxo de importação da *${target.name}* pelo Porto de Santos e sabemos como é importante cumprir as janelas de retirada (seja em DI ou remoção rápida em DTA) para evitar custos altos de armazenagem.
+
+Como a *TSC Express* tem matriz em *Bauru* e filial em *Guarulhos*, operamos toda semana na rota *Porto de Santos ↔ ${target.city}* com frota porta-contêiner habilitada para *DTA, DI${target.isIMO ? ' e Cargas Químicas/Perigosas (IMO)' : ''}*.
+
+Por já termos caminhões retornando para a nossa base na região, conseguimos oferecer para a ${target.name} uma condição excelente de *frete de retorno* e retirada imediata nos terminais de Santos.
+
+Posso enviar nossa apresentação por aqui para cotarmos o próximo embarque de vocês?`;
+            } else if (channel === 'coldcall') {
+                output = `[ROTEIRO SIMPLES PARA LIGAÇÃO — ${target.name.toUpperCase()} | TEL: ${target.phone}]
+
+1. NA RECEPÇÃO:
+"Bom dia! Por favor, gostaria de falar com o responsável pelo setor de ${target.decisorRole} sobre transporte de contêineres vindos do Porto de Santos."
+
+2. FALANDO COM O RESPONSÁVEL (${buyer}):
+"Olá, ${buyer}, bom dia! Aqui é da transportadora ${rep}. Nós temos base em Bauru e filial em Guarulhos, e puxamos diariamente contêineres em DI e DTA do Porto de Santos aqui para a rota de ${target.city}."
+
+3. O GRANDE DIFERENCIAL:
+"Como nossos caminhões porta-contêiner já voltam de Santos para a nossa base toda semana${target.isIMO ? ' e temos todas as licenças para carga química/perigosa (IMO)' : ''}, conseguimos atender a ${target.name} com tarifa de frete de retorno e sem perder janela no porto. Qual o seu melhor e-mail ou WhatsApp para eu te enviar nossa documentação de cadastro?"`;
+            } else if (channel === 'email') {
+                output = `Assunto: Transporte Rodoviário DTA / DI (Rota Porto de Santos ↔ ${target.city}) — TSC Express
+
+Olá, ${buyer}, tudo bem?
+
+Entro em contato porque a unidade da ${target.name} em ${target.city} fica exatamente na rota principal da TSC Express (Top Sea Container Express Logística LTDA).
+
+Com matriz em Bauru e filial em Guarulhos, somos especializados em operações no Porto de Santos:
+• Remoção rápida em DTA (reduzindo custos de armazenagem primária);
+• Coleta e entrega direta de cargas nacionalizadas (DI);
+• ${target.isIMO ? 'Habilitação completa para Transporte de Produtos Perigosos / Químicos (IMO).' : 'Frota porta-contêiner 20\' e 40\' rastreada com pontualidade nos agendamentos.'}
+
+Como nossa frota faz o circuito constante entre o Porto de Santos, Guarulhos e a região de Bauru/Interior, conseguimos oferecer à ${target.name} excelente disponibilidade de caminhões e tarifa competitiva de circuito fechado.
+
+Qual o procedimento para cadastrarmos a TSC Express para as próximas cotações?
+
+Atenciosamente,
+${rep}
+Matriz Bauru - SP | Filial Guarulhos - SP
+https://tscexpress.com.br`;
+            } else if (channel === 'linkedin') {
+                output = `Olá, ${buyer}! Vi que você atua na área de ${target.decisorRole} na ${target.name}.
+
+Aqui na TSC Express (bases em Bauru e Guarulhos), somos especializados em puxar contêineres em DTA e DI${target.isIMO ? ' (incluindo cargas IMO)' : ''} do Porto de Santos exatamente na rota de ${target.city}.
+
+Como temos frota retornando toda semana de Santos para a região, conseguimos apoiar a ${target.name} com ótimo custo de frete e agilidade de janela. Vamos nos conectar?`;
+            }
+
+            document.getElementById('pitch-manifest-output').value = output;
+        }
+
+        function copyManifestPitch() {
+            const el = document.getElementById('pitch-manifest-output');
+            el.select();
+            document.execCommand('copy');
+            showToast('Mensagem copiada! Pronto para colar.');
+        }
+
+        function sendManifestPitchWhatsApp() {
+            const text = document.getElementById('pitch-manifest-output').value;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        // Exportar Planilha CSV
+        function exportManifestCSV() {
+            const headers = ['Empresa', 'Cidade', 'Telefone', 'Site', 'Setor Decisor', 'Status', 'Resumo Importacao', 'Argumento de Venda TSC', 'Anotacoes'];
+            const rows = importersData.map(i => [
+                `"${i.name}"`,
+                `"${i.city}"`,
+                `"${i.phone}"`,
+                `"${i.website}"`,
+                `"${i.decisorRole}"`,
+                `"${i.status}"`,
+                `"${i.manifestItems.replace(/"/g, '""')}"`,
+                `"${i.killerArgument.replace(/"/g, '""')}"`,
+                `"${(i.notes || '').replace(/"/g, '""')}"`
+            ]);
+
+            const csvContent = '\uFEFF' + [headers.join(';'), ...rows.map(r => r.join(';'))].join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'TSC_Express_10_Clientes_Importadores.csv';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showToast('Planilha baixada com sucesso!');
+        }
+
+        let toastTimer;
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-msg').textContent = msg;
+            toast.classList.remove('hidden');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 2800);
+        }
+    </script>
+</body>
+</html>
