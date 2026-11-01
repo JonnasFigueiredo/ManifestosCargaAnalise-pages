@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TSC Express | Radar de Novos Clientes</title>
+    <title>Radar de Novos Clientes</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts: Inter -->
@@ -81,11 +81,11 @@
                 <!-- Título Claro e Direto -->
                 <div class="flex items-center space-x-3.5">
                     <div class="w-12 h-12 rounded-2xl bg-[#1E3A8A] text-white flex items-center justify-center font-extrabold text-lg tracking-wider shrink-0 shadow-sm">
-                        TSC
+                        <i class="fa-solid fa-truck text-xl" aria-hidden="true"></i>
                     </div>
                     <div>
                         <h1 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
-                            TSC Express | Radar de Novos Clientes
+                            Radar de Novos Clientes
                         </h1>
                         <p class="text-xs sm:text-sm text-slate-500 font-medium mt-0.5">
                             10 Indústrias Importadoras na Rota Santos ↔ Bauru / Interior / Guarulhos
@@ -187,7 +187,7 @@
                         Argumento Financeiro para o Cliente
                     </span>
                     <h2 class="text-xl sm:text-2xl font-extrabold text-slate-900 mt-2">
-                        Quanto o cliente economiza puxando em DTA com a TSC Express?
+                        Quanto o cliente economiza com uma operação DTA?
                     </h2>
                     <p class="text-sm text-slate-600 mt-1">
                         Deslize as barras abaixo durante a conversa com o importador para mostrar quanto ele economiza tirando o contêiner do Porto de Santos rapidamente.
@@ -238,7 +238,7 @@
                                 <span class="text-xl sm:text-2xl font-extrabold text-rose-700 mt-1 block" id="res-primary-cost">R$ 38.500</span>
                             </div>
                             <div class="p-4 rounded-2xl bg-indigo-50 border border-indigo-200">
-                                <span class="text-xs font-bold text-indigo-800 block">Com DTA TSC Express</span>
+                                <span class="text-xs font-bold text-indigo-800 block">Operação DTA</span>
                                 <span class="text-xl sm:text-2xl font-extrabold text-indigo-900 mt-1 block" id="res-dta-cost">R$ 21.250</span>
                             </div>
                         </div>
@@ -255,7 +255,7 @@
                                 Redução de 45% nos custos portuários
                             </span>
                             <p class="text-xs text-emerald-900 pt-1">
-                                Essa economia na armazenagem praticamente paga o frete rodoviário da TSC Express.
+                                Essa economia na armazenagem praticamente paga o frete rodoviário.
                             </p>
                         </div>
 
@@ -286,7 +286,7 @@
                         Mensagens Personalizadas para Abordar a Indústria
                     </h2>
                     <p class="text-sm text-slate-600 mt-1">
-                        Escolha a empresa e o canal. O texto já vem preenchido com o que ela importa por Santos e o argumento da base da TSC Express.
+                        Escolha a empresa e o canal. O texto usa as informações de importação e o argumento de atendimento.
                     </p>
                 </div>
 
@@ -317,7 +317,7 @@
                             </div>
                             <div>
                                 <label class="block text-xs font-bold uppercase text-slate-600 mb-1">Assinado por</label>
-                                <input type="text" id="pitch-rep-name" oninput="generateManifestPitch()" value="TSC Express" class="w-full min-h-[44px] px-3 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-indigo-600">
+                                <input type="text" id="pitch-rep-name" oninput="generateManifestPitch()" value="" placeholder="Nome da empresa" class="w-full min-h-[44px] px-3 py-2 bg-white border border-slate-300 rounded-xl text-sm text-slate-800 focus:outline-none focus:border-indigo-600">
                             </div>
                         </div>
 
@@ -360,7 +360,7 @@
                         Passo a Passo da Semana para Fechar Novos Contratos
                     </h2>
                     <p class="text-sm text-slate-600 mt-1">
-                        Um roteiro prático de Segunda a Sexta-feira para a equipe comercial da TSC Express transformar essas 10 empresas em clientes recorrentes.
+                        Um roteiro prático de segunda a sexta-feira para a equipe comercial transformar essas 10 empresas em clientes recorrentes.
                     </p>
                 </div>
 
@@ -369,7 +369,7 @@
                         <span class="inline-block text-xs font-extrabold uppercase px-2.5 py-1 rounded-md bg-blue-100 text-blue-900">Segunda-feira</span>
                         <h3 class="text-base font-bold text-slate-900">1. Separar 3 a 5 Indústrias da Rota da Semana</h3>
                         <p class="text-sm text-slate-600 leading-relaxed">
-                            Olhe onde os caminhões da TSC Express estarão descarregando na semana (Bauru, região de Marília, Campinas ou Guarulhos) e escolha as indústrias vizinhas na aba <strong>10 Clientes-Alvo</strong>.
+                            Considere onde a frota estará descarregando na semana (Bauru, região de Marília, Campinas ou Guarulhos) e escolha as indústrias vizinhas na aba <strong>10 Clientes-Alvo</strong>.
                         </p>
                     </div>
 
@@ -393,7 +393,7 @@
                         <span class="inline-block text-xs font-extrabold uppercase px-2.5 py-1 rounded-md bg-amber-100 text-amber-900">Sexta-feira</span>
                         <h3 class="text-base font-bold text-slate-900">4. Enviar Documentos para Cadastro Rápido</h3>
                         <p class="text-sm text-slate-600 leading-relaxed">
-                            Assim que o comprador pedir cotação, envie imediatamente a pasta da TSC Express (Cartão CNPJ, ANTT, Habilitação DTA, Seguros RCTR-C/RC-DC e Licenças de Carga Perigosa IMO).
+                            Assim que o comprador pedir cotação, envie a documentação de cadastro da transportadora (Cartão CNPJ, ANTT, Habilitação DTA, Seguros RCTR-C/RC-DC e Licenças de Carga Perigosa IMO).
                         </p>
                     </div>
                 </div>
@@ -405,7 +405,7 @@
     <!-- Rodapé Simples -->
     <footer class="max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 text-center sm:text-left border-t border-slate-200 text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-2">
         <div>
-            <strong>TSC Express</strong> (Top Sea Container Express Logística LTDA) • Matriz Bauru - SP | Filial Guarulhos - SP
+            Matriz Bauru - SP • Filial Guarulhos - SP
         </div>
         <button onclick="exportManifestCSV()" class="text-indigo-700 font-bold hover:underline">
             <i class="fa-solid fa-file-excel mr-1"></i> Exportar lista para Excel (CSV)
@@ -424,7 +424,7 @@
                 corridor: 'BAURU',
                 primaryBadge: 'DTA + Carga Química IMO • Rota Bauru',
                 shortSummary: 'Importa chumbo, polímeros e químicos classificados (IMO) via Santos e exporta baterias.',
-                distanceInfo: 'Na mesma cidade da Matriz TSC Express (Bauru)',
+                distanceInfo: 'Na mesma cidade da matriz em Bauru',
                 address: 'Rod. Mal. Rondon / Gov. Castelo Branco, Km 232, Bauru - SP',
                 phone: '(14) 2108-7000',
                 phoneClean: '551421087000',
@@ -434,7 +434,7 @@
                 isBackhaul: true,
                 tags: ['Base Bauru', 'Carga Perigosa IMO', 'Frete Casado (Imp/Exp)', 'DTA e DI'],
                 manifestItems: 'Importa ligas de chumbo, separadores de polietileno, polímeros e aditivos químicos classificados (Carga IMO) pelo Porto de Santos. Também exporta baterias automotivas e estacionárias.',
-                killerArgument: 'Vizinha da matriz da TSC Express em Bauru! Permite casar o caminhão que desce com baterias de exportação para Santos e sobe com insumos químicos IMO em DI ou DTA.',
+                killerArgument: 'Vizinha da matriz em Bauru! Permite casar o caminhão que desce com baterias de exportação para Santos e sobe com insumos químicos IMO em DI ou DTA.',
                 status: 'Não Contatado',
                 notes: ''
             },
@@ -445,7 +445,7 @@
                 corridor: 'BAURU',
                 primaryBadge: 'Rota Bauru • Alto Giro de Contêineres',
                 shortSummary: 'Importa dezenas de contêineres 40\' HC com papelaria e insumos gráficos via Santos.',
-                distanceInfo: 'Na mesma cidade da Matriz TSC Express (Bauru)',
+                distanceInfo: 'Na mesma cidade da matriz em Bauru',
                 address: 'Rua Aimorés, 6-9, Vila Falcão, Bauru - SP',
                 phone: '(14) 2106-9000',
                 phoneClean: '551421069000',
@@ -455,7 +455,7 @@
                 isBackhaul: true,
                 tags: ['Base Bauru', 'Alto Giro 40\' HC', 'DTA e DI', 'Retorno Garantido'],
                 manifestItems: 'Importa dezenas de contêineres 40\' HC pelo Porto de Santos com artigos escolares, materiais de escritório, insumos gráficos, espirais e produtos acabados do grupo ACCO Brands.',
-                killerArgument: 'Os caminhões da TSC Express precisam voltar para a matriz em Bauru toda semana. A TSC pode dedicar tração de retorno de Santos para a fábrica da Tilibra sem custo de retorno vazio.',
+                killerArgument: 'A frota precisa voltar para a matriz em Bauru toda semana. A transportadora pode dedicar tração de retorno de Santos para a fábrica da Tilibra sem custo de retorno vazio.',
                 status: 'Não Contatado',
                 notes: ''
             },
@@ -466,7 +466,7 @@
                 corridor: 'BAURU',
                 primaryBadge: 'Rota Bauru • DI & Insumos Industriais',
                 shortSummary: 'Importa maquinário de massas, peças e embalagens especiais pelo Porto de Santos.',
-                distanceInfo: 'Distrito Industrial de Bauru (A 10 min da Matriz TSC)',
+                distanceInfo: 'Distrito Industrial de Bauru (a 10 min da matriz)',
                 address: 'Distrito Industrial I, Bauru - SP',
                 phone: '(14) 3203-2600',
                 phoneClean: '551432032600',
@@ -487,7 +487,7 @@
                 corridor: 'BAURU',
                 primaryBadge: 'DTA + Carga Química IMO • 40km de Bauru',
                 shortSummary: 'Importa aditivos químicos para lubrificantes e catalisadores via Porto de Santos.',
-                distanceInfo: 'A apenas 40 km da Matriz da TSC Express em Bauru',
+                distanceInfo: 'A apenas 40 km da matriz em Bauru',
                 address: 'Rodovia Marechal Rondon, Km 292, Lençóis Paulista - SP',
                 phone: '(14) 3269-5000',
                 phoneClean: '551432695000',
@@ -497,7 +497,7 @@
                 isBackhaul: true,
                 tags: ['Eixo Bauru (40km)', 'Carga Perigosa IMO', 'Isotanks / Contêineres', 'DTA e DI'],
                 manifestItems: 'Importa aditivos químicos especiais para óleos lubrificantes, catalisadores industriais e equipamentos de rerrefino pelo Porto de Santos (forte presença na Ilha Barnabé e Alemoa).',
-                killerArgument: 'Combinação perfeita entre a licença de Produtos Perigosos (IMO) da TSC Express e a localização estratégica na Rodovia Marechal Rondon (eixo Bauru-Lençóis).',
+                killerArgument: 'Combinação perfeita entre a licença de Produtos Perigosos (IMO) da transportadora e a localização estratégica na Rodovia Marechal Rondon (eixo Bauru-Lençóis).',
                 status: 'Não Contatado',
                 notes: ''
             },
@@ -518,7 +518,7 @@
                 isBackhaul: true,
                 tags: ['Gigante Exportadora/Importadora', 'Forte em DTA e DI', 'Frete Casado'],
                 manifestItems: 'Importa bombas de alta pressão, componentes hidráulicos, sensores agrícolas, aço especial e resinas via Porto de Santos em regime de DTA (Porto Seco) e DI. Exporta pulverizadores em contêineres.',
-                killerArgument: 'Um dos maiores embarcadores de contêineres do Centro-Oeste Paulista. A TSC Express pode operar tanto na remoção DTA em Santos quanto no circuito completo Bauru/Pompeia ↔ Porto de Santos.',
+                killerArgument: 'Um dos maiores embarcadores de contêineres do Centro-Oeste Paulista. A transportadora pode operar tanto na remoção DTA em Santos quanto no circuito completo Bauru/Pompeia ↔ Porto de Santos.',
                 status: 'Não Contatado',
                 notes: ''
             },
@@ -529,7 +529,7 @@
                 corridor: 'BAURU',
                 primaryBadge: 'Eixo Bauru-Marília • Importa e Exporta',
                 shortSummary: 'Importa insumos e embalagens por Santos e exporta biscoitos para mais de 50 países.',
-                distanceInfo: 'Eixo Bauru – Marília (100 km da Matriz TSC)',
+                distanceInfo: 'Eixo Bauru – Marília (100 km da matriz)',
                 address: 'Av. José de Grande, 366, Fragata, Marília - SP',
                 phone: '(14) 3401-6000',
                 phoneClean: '551434016000',
@@ -581,7 +581,7 @@
                 isBackhaul: false,
                 tags: ['Altíssimo Volume DTA', 'Baterias Lítio (IMO 9)', 'Alto Valor / PGR'],
                 manifestItems: 'Importa centenas de contêineres de placas-mãe, displays, semicondutores e baterias de íons de lítio (Classe IMO 9) via Porto de Santos e Aeroporto de Guarulhos.',
-                killerArgument: 'A TSC Express possui base em Guarulhos e forte atuação em Santos, cobrindo exatamente o eixo marítimo-rodoviário-aéreo (DTA entre Santos, GRU e CLIAs de Jundiaí/Campinas).',
+                killerArgument: 'A transportadora possui base em Guarulhos e forte atuação em Santos, cobrindo o eixo marítimo-rodoviário-aéreo (DTA entre Santos, GRU e CLIAs de Jundiaí/Campinas).',
                 status: 'Não Contatado',
                 notes: ''
             },
@@ -602,7 +602,7 @@
                 isBackhaul: false,
                 tags: ['DTA Entreposto', 'DI Just-in-Time', 'Autopeças & Químicos'],
                 manifestItems: 'Importa sistemas de injeção, componentes eletrônicos automotivos, aço usinado e fluidos químicos pelo Porto de Santos (foco nos terminais Tecon, TEV e BTP).',
-                killerArgument: 'A Bosch não pode sofrer parada de linha nem atraso de janela em Santos. A especialização da TSC Express em evitar no-show e gerir DTA/DI encaixa na exigência alemã de pontualidade.',
+                killerArgument: 'A Bosch não pode sofrer parada de linha nem atraso de janela em Santos. A especialização da transportadora em evitar no-show e gerir DTA/DI atende à exigência de pontualidade.',
                 status: 'Não Contatado',
                 notes: ''
             },
@@ -613,7 +613,7 @@
                 corridor: 'GUARULHOS',
                 primaryBadge: 'Base Guarulhos • DTA & Químico/Farma',
                 shortSummary: 'Importa insumos farmacêuticos e químicos controlados via Porto de Santos e GRU.',
-                distanceInfo: 'Ao lado da Filial/Base Operacional da TSC Express em Guarulhos',
+                distanceInfo: 'Ao lado da filial/base operacional em Guarulhos',
                 address: 'Rodovia Presidente Dutra, Km 222,2, Porto da Igreja, Guarulhos - SP',
                 phone: '(11) 2608-6000',
                 phoneClean: '551126086000',
@@ -623,7 +623,7 @@
                 isBackhaul: false,
                 tags: ['Base Guarulhos', 'DTA Santos ↔ GRU', 'Químico / Reefer'],
                 manifestItems: 'Importa Insumos Farmacêuticos Ativos (IFAs), reagentes químicos, blísteres de alumínio e equipamentos de laboratório pelo Porto de Santos (Movecta/Tecon/BTP) e Aeroporto GRU.',
-                killerArgument: 'A filial da TSC Express em Guarulhos fica ao lado da fábrica do Aché na Via Dutra, oferecendo resposta imediata para puxar contêineres de Santos (DI ou DTA) direto para Guarulhos.',
+                killerArgument: 'A filial em Guarulhos fica ao lado da fábrica do Aché na Via Dutra, oferecendo resposta imediata para puxar contêineres de Santos (DI ou DTA) direto para Guarulhos.',
                 status: 'Não Contatado',
                 notes: ''
             }
@@ -819,7 +819,7 @@
                             </div>
 
                             <div class="p-3 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-1">
-                                <span class="font-bold text-emerald-950 block">Por que a TSC Express ganha esse cliente:</span>
+                                <span class="font-bold text-emerald-950 block">Por que essa solução atende ao cliente:</span>
                                 <p class="text-emerald-900 leading-relaxed">${item.killerArgument}</p>
                             </div>
 
@@ -903,15 +903,15 @@
             document.getElementById('res-savings').textContent = fmtBRL(savings);
             document.getElementById('res-savings-pct').textContent = `Redução de ${savingsPct}% nos custos portuários`;
 
-            const summaryText = `📊 *SIMULAÇÃO DE ECONOMIA PORTUÁRIA — TSC EXPRESS*
+            const summaryText = `📊 *SIMULAÇÃO DE ECONOMIA PORTUÁRIA*
 Empresa: *${clientName}*
 Lote: *${containers} contêiner(es)* | Valor médio: *${fmtBRL(cifValue)}* (${days} dias)
 
 ❌ *Deixando parado no Porto de Santos:* ${fmtBRL(totalPrimaryCost)}
-✅ *Remoção imediata em DTA com a TSC Express:* ${fmtBRL(totalDTACost)}
+✅ *Remoção imediata em DTA:* ${fmtBRL(totalDTACost)}
 💰 *Economia estimada no lote:* *${fmtBRL(savings)} (-${savingsPct}%)*
 
-A TSC Express (bases em Bauru e Guarulhos) é especialista em DTA, DI e cargas IMO no Porto de Santos. Vamos cotar seu próximo embarque?`;
+Nossa transportadora (bases em Bauru e Guarulhos) é especialista em DTA, DI e cargas IMO no Porto de Santos. Vamos cotar seu próximo embarque?`;
 
             document.getElementById('calc-summary-text').value = summaryText;
         }
@@ -957,7 +957,7 @@ A TSC Express (bases em Bauru e Guarulhos) é especialista em DTA, DI e cargas I
             const selectedId = document.getElementById('pitch-target-select').value;
             const channel = document.getElementById('pitch-channel-select').value;
             const buyer = document.getElementById('pitch-buyer-name').value.trim() || 'Responsável de Comex';
-            const rep = document.getElementById('pitch-rep-name').value.trim() || 'TSC Express';
+            const rep = document.getElementById('pitch-rep-name').value.trim() || 'nossa empresa';
 
             const target = importersData.find(i => i.id === selectedId) || importersData[0];
 
@@ -974,7 +974,7 @@ A TSC Express (bases em Bauru e Guarulhos) é especialista em DTA, DI e cargas I
 
 Acompanhamos o fluxo de importação da *${target.name}* pelo Porto de Santos e sabemos como é importante cumprir as janelas de retirada (seja em DI ou remoção rápida em DTA) para evitar custos altos de armazenagem.
 
-Como a *TSC Express* tem matriz em *Bauru* e filial em *Guarulhos*, operamos toda semana na rota *Porto de Santos ↔ ${target.city}* com frota porta-contêiner habilitada para *DTA, DI${target.isIMO ? ' e Cargas Químicas/Perigosas (IMO)' : ''}*.
+Como temos matriz em *Bauru* e filial em *Guarulhos*, operamos toda semana na rota *Porto de Santos ↔ ${target.city}* com frota porta-contêiner habilitada para *DTA, DI${target.isIMO ? ' e Cargas Químicas/Perigosas (IMO)' : ''}*.
 
 Por já termos caminhões retornando para a nossa base na região, conseguimos oferecer para a ${target.name} uma condição excelente de *frete de retorno* e retirada imediata nos terminais de Santos.
 
@@ -991,11 +991,11 @@ Posso enviar nossa apresentação por aqui para cotarmos o próximo embarque de 
 3. O GRANDE DIFERENCIAL:
 "Como nossos caminhões porta-contêiner já voltam de Santos para a nossa base toda semana${target.isIMO ? ' e temos todas as licenças para carga química/perigosa (IMO)' : ''}, conseguimos atender a ${target.name} com tarifa de frete de retorno e sem perder janela no porto. Qual o seu melhor e-mail ou WhatsApp para eu te enviar nossa documentação de cadastro?"`;
             } else if (channel === 'email') {
-                output = `Assunto: Transporte Rodoviário DTA / DI (Rota Porto de Santos ↔ ${target.city}) — TSC Express
+                output = `Assunto: Transporte Rodoviário DTA / DI (Rota Porto de Santos ↔ ${target.city})
 
 Olá, ${buyer}, tudo bem?
 
-Entro em contato porque a unidade da ${target.name} em ${target.city} fica exatamente na rota principal da TSC Express (Top Sea Container Express Logística LTDA).
+Entro em contato porque a unidade da ${target.name} em ${target.city} fica exatamente na rota principal da nossa operação de transporte.
 
 Com matriz em Bauru e filial em Guarulhos, somos especializados em operações no Porto de Santos:
 • Remoção rápida em DTA (reduzindo custos de armazenagem primária);
@@ -1004,16 +1004,16 @@ Com matriz em Bauru e filial em Guarulhos, somos especializados em operações n
 
 Como nossa frota faz o circuito constante entre o Porto de Santos, Guarulhos e a região de Bauru/Interior, conseguimos oferecer à ${target.name} excelente disponibilidade de caminhões e tarifa competitiva de circuito fechado.
 
-Qual o procedimento para cadastrarmos a TSC Express para as próximas cotações?
+Qual o procedimento para cadastrar nossa transportadora para as próximas cotações?
 
 Atenciosamente,
 ${rep}
 Matriz Bauru - SP | Filial Guarulhos - SP
-https://tscexpress.com.br`;
+`;
             } else if (channel === 'linkedin') {
                 output = `Olá, ${buyer}! Vi que você atua na área de ${target.decisorRole} na ${target.name}.
 
-Aqui na TSC Express (bases em Bauru e Guarulhos), somos especializados em puxar contêineres em DTA e DI${target.isIMO ? ' (incluindo cargas IMO)' : ''} do Porto de Santos exatamente na rota de ${target.city}.
+Nossa transportadora (bases em Bauru e Guarulhos) é especializada em puxar contêineres em DTA e DI${target.isIMO ? ' (incluindo cargas IMO)' : ''} do Porto de Santos na rota de ${target.city}.
 
 Como temos frota retornando toda semana de Santos para a região, conseguimos apoiar a ${target.name} com ótimo custo de frete e agilidade de janela. Vamos nos conectar?`;
             }
@@ -1035,7 +1035,7 @@ Como temos frota retornando toda semana de Santos para a região, conseguimos ap
 
         // Exportar Planilha CSV
         function exportManifestCSV() {
-            const headers = ['Empresa', 'Cidade', 'Telefone', 'Site', 'Setor Decisor', 'Status', 'Resumo Importacao', 'Argumento de Venda TSC', 'Anotacoes'];
+            const headers = ['Empresa', 'Cidade', 'Telefone', 'Site', 'Setor Decisor', 'Status', 'Resumo Importacao', 'Argumento de Venda', 'Anotacoes'];
             const rows = importersData.map(i => [
                 `"${i.name}"`,
                 `"${i.city}"`,
@@ -1053,7 +1053,7 @@ Como temos frota retornando toda semana de Santos para a região, conseguimos ap
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'TSC_Express_10_Clientes_Importadores.csv';
+            a.download = 'clientes_importadores.csv';
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
